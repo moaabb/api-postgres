@@ -21,7 +21,7 @@ func routes() *echo.Echo {
 		}
 	})
 
-	e.GET("/api", h.GetAll)
+	e.GET("/api/movies", h.GetAll)
 
 	return e
 }

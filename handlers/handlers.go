@@ -5,6 +5,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/moaabb/api-postgres/config"
+	"github.com/moaabb/api-postgres/driver"
 )
 
 type Message struct {
@@ -12,17 +13,23 @@ type Message struct {
 }
 
 type Handlers struct {
-	app *config.Application
+	a  *config.Application
+	DB driver.DBModel
 }
 
 func NewHandlers(a *config.Application) *Handlers {
-	return &Handlers{app: a}
+	return &Handlers{a, driver.NewDB(a.DBModel)}
 }
 
 func (m *Handlers) GetAll(c echo.Context) error {
-	c.JSON(http.StatusOK, Message{
-		Message: "API is working",
-	})
+	movies, err := m.DB.GetAll()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, Message{"Could not fetch the data, try again later!"})
+		m.a.L.Error(err.Error())
+		return err
+	}
+
+	c.JSON(http.StatusOK, movies)
 
 	return nil
 }

@@ -11,6 +11,7 @@ import (
 
 	"github.com/hashicorp/go-hclog"
 	"github.com/moaabb/api-postgres/config"
+	"github.com/moaabb/api-postgres/driver"
 )
 
 var app config.Application
@@ -19,6 +20,14 @@ func main() {
 	cfg := config.ReadConfig()
 
 	app.L = hclog.Default()
+	conn, err := driver.ConnectDB(cfg.DB.DSN)
+	if err != nil {
+		app.L.Error("Could not connect to DB", err.Error())
+		os.Exit(1)
+	}
+	app.L.Info("Connected to DB!")
+
+	app.DBModel = conn
 
 	s := http.Server{
 		Addr:    cfg.Server.Address,
