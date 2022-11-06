@@ -35,7 +35,7 @@ func main() {
 	}
 
 	go func() {
-		log.Println(fmt.Sprintf("Server Listening on pont %s", cfg.Server.Address))
+		app.L.Info(fmt.Sprintf("Server Listening on %s", cfg.Server.Address))
 
 		err := s.ListenAndServe()
 		if err != nil {
@@ -54,7 +54,7 @@ func main() {
 	// Sig awaits to receive the signal from the channel when it's available
 	sig := <-c
 
-	log.Println(fmt.Sprintf("Got Signal: %s", sig))
+	app.L.Info(fmt.Sprintf("Got Signal: %s", sig))
 
 	// Try to gracefully shutdown the server, or force the shutdown in 30 seconds
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)

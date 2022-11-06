@@ -22,6 +22,13 @@ func routes() *echo.Echo {
 	})
 
 	e.GET("/api/movies", h.GetAll)
+	e.GET("/api/movies/:id", h.GetByID)
+
+	e.POST("/api/movies", h.InsertMovie)
+
+	e.PUT("/api/movies/:id", h.UpdateMovie)
+
+	e.DELETE("/api/movies/:id", h.DeleteMovie)
 
 	return e
 }
